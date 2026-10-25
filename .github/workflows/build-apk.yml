@@ -17,25 +17,10 @@ jobs:
       - name: Checkout del codigo fuente
         uses: actions/checkout@v4
 
-      - name: Descomprimir paquete si existe ZIP
+      - name: Descomprimir paquete ZIP
         run: |
           if [ -f "GG_Actualizado_Para_GitHub.zip" ]; then
-            echo "Extrayendo archivos de ZIP..."
-            cat << 'EOF' > extract.py
-import zipfile, os
-
-with zipfile.ZipFile('GG_Actualizado_Para_GitHub.zip') as z:
-    for m in z.infolist():
-        target = os.path.normpath(m.filename.replace('\\', '/'))
-        if m.filename.endswith('/') or m.filename.endswith('\\'):
-            os.makedirs(target, exist_ok=True)
-        else:
-            os.makedirs(os.path.dirname(target), exist_ok=True)
-            with open(target, 'wb') as f:
-                f.write(z.read(m.filename))
-print("Archivos extraidos correctamente.")
-EOF
-            python3 extract.py
+            unzip -o GG_Actualizado_Para_GitHub.zip
           fi
 
       - name: Configurar Node.js 22
